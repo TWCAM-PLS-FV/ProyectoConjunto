@@ -4,7 +4,7 @@ import java.util.List;
 
 import es.uv.etse.twcam.backend.business.EmpleadoExceptions.EmpleadoException;
 
-public interface EmpleadoService{
+public interface EmpleadoService {
 
     /*
      * Lista de todos los Empleados
@@ -19,7 +19,7 @@ public interface EmpleadoService{
     /*
      * Crear empleado
      */
-    public Empleado create(Empleado newEmpleado) throws EmpleadoException;
+    public Empleado create(Integer id, String nombre, String imagen, String cargo) throws EmpleadoException;
 
     /*
      * Actualizar datos de empleado
@@ -31,10 +31,4 @@ public interface EmpleadoService{
      */
     public Boolean delete(Empleado empleado) throws EmpleadoException;
 
-
-
-
-
-
-    
 }

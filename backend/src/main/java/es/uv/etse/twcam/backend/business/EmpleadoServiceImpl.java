@@ -47,43 +47,41 @@ public class EmpleadoServiceImpl implements EmpleadoService {
      */
     public List<Empleado> listAll() throws EmpleadoException {
         List<Empleado> listaEmpleados = new ArrayList<>();
-        if(dictionary.values()!=null){
+        if (dictionary.values() != null) {
             listaEmpleados.addAll(dictionary.values());
             return listaEmpleados;
-        }
-        else{
+        } else {
             throw new EmpleadoDictionaryEmptyException("Diccionario vacío.");
-        }        
+        }
     }
 
-    public Empleado findById(Integer id) throws EmpleadoException{
-        if(dictionary.containsValue(id)){
+    public Empleado findById(Integer id) throws EmpleadoException {
+        if (dictionary.containsValue(id)) {
             return dictionary.get(id);
-        }else{
+        } else {
             throw new EmpleadoDictionaryEmptyException("No se encuentra el ID dentro del diccionario.");
         }
     }
 
-    public Empleado create(Empleado newEmpleado) throws EmpleadoException {
+    public Empleado create(Integer id, String nombre, String imagen, String cargo) throws EmpleadoException {
+        Empleado newEmpleado = new Empleado(id, nombre, imagen, cargo);
         if (newEmpleado != null && newEmpleado.getId() != null) {
             dictionary.put(newEmpleado.getId(), newEmpleado);
-        }
-        else {
+        } else {
             throw new EmpleadoIncorrectDataException("Eror de datos");
         }
-
         return newEmpleado;
     }
 
     public Empleado update(Empleado newEmpleadoData) throws EmpleadoException {
-        if(newEmpleadoData!=null){
-            if(dictionary.containsKey(newEmpleadoData.getId())){
+        if (newEmpleadoData != null) {
+            if (dictionary.containsKey(newEmpleadoData.getId())) {
                 dictionary.put(newEmpleadoData.getId(), newEmpleadoData);
-            }else{
+            } else {
                 throw new EmpleadoDictionaryEmptyException("No se encuentra el ID dentro del diccionario.");
             }
-        }else{
-            throw new EmpleadoIncorrectDataException("Eror de datos");            
+        } else {
+            throw new EmpleadoIncorrectDataException("Eror de datos");
         }
 
         return newEmpleadoData;
@@ -91,15 +89,15 @@ public class EmpleadoServiceImpl implements EmpleadoService {
 
     public Boolean delete(Empleado empleadoToDelete) throws EmpleadoException {
         Boolean deleted = false;
-        if(empleadoToDelete!=null){
-            if(dictionary.containsKey(empleadoToDelete.getId())){
+        if (empleadoToDelete != null) {
+            if (dictionary.containsKey(empleadoToDelete.getId())) {
                 dictionary.remove(empleadoToDelete.getId());
                 deleted = true;
-            }else{
+            } else {
                 throw new EmpleadoDictionaryEmptyException("No se encuentra el ID dentro del diccionario.");
             }
-        }else{
-            throw new EmpleadoIncorrectDataException("Eror de datos");            
+        } else {
+            throw new EmpleadoIncorrectDataException("Eror de datos");
         }
 
         return deleted;
