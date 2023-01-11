@@ -16,16 +16,17 @@ public class Empleado {
     /*
      * Constructor
      */
-    public Empleado(Integer id, String nombre, String imagen, String puesto){
-        this.id=id;
-        this.nombre=nombre;
-        this.imagen=imagen;
-        this.puesto=puesto;
+    public Empleado(Integer id, String nombre, String imagen, String puesto) {
+        this.id = id;
+        this.nombre = nombre;
+        this.imagen = imagen;
+        this.puesto = puesto;
     }
 
     /*
      * Getters y Setters
      */
+
     public Integer getId() {
         return this.id;
     }

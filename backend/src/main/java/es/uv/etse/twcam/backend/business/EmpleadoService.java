@@ -14,7 +14,7 @@ public interface EmpleadoService {
     /*
      * Obtener empeado mediante ID
      */
-    public Empleado findById(Integer id) throws EmpleadoException;
+    public Empleado findById(Integer id);
 
     /*
      * Crear empleado

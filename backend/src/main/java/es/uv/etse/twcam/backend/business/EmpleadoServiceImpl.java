@@ -15,6 +15,7 @@ public class EmpleadoServiceImpl implements EmpleadoService {
      * Instancia única.
      */
     private static EmpleadoServiceImpl the;
+    Empleado newEmpleado = null;
 
     /**
      * Diccionario para el almacenamiento de productos.
@@ -55,21 +56,23 @@ public class EmpleadoServiceImpl implements EmpleadoService {
         }
     }
 
-    public Empleado findById(Integer id) throws EmpleadoException {
+    public Empleado findById(Integer id) {
+        Empleado empleado;
+
         if (dictionary.containsValue(id)) {
-            return dictionary.get(id);
+            empleado = dictionary.get(id);
         } else {
-            throw new EmpleadoDictionaryEmptyException("No se encuentra el ID dentro del diccionario.");
+            empleado = null;
         }
+        return empleado;
     }
 
     public Empleado create(Integer id, String nombre, String imagen, String cargo) throws EmpleadoException {
-        Empleado newEmpleado = new Empleado(id, nombre, imagen, cargo);
-        if (newEmpleado != null && newEmpleado.getId() != null) {
+        newEmpleado = new Empleado(id, nombre, imagen, cargo);
+        if (newEmpleado != null) {
             dictionary.put(newEmpleado.getId(), newEmpleado);
-        } else {
+        } else
             throw new EmpleadoIncorrectDataException("Eror de datos");
-        }
         return newEmpleado;
     }
 

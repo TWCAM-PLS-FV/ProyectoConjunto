@@ -19,7 +19,7 @@ import es.uv.etse.twcam.backend.business.EmpleadoService;
 import es.uv.etse.twcam.backend.business.EmpleadoServiceImpl;
 import es.uv.etse.twcam.backend.business.EmpleadoExceptions.EmpleadoException;
 
-@WebServlet("/api/empleados/*")
+@WebServlet("/api/empleados/")
 public class EmpleadosEndpoint extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -33,7 +33,7 @@ public class EmpleadosEndpoint extends HttpServlet {
 	/**
 	 * Servicio sobre Empleados.
 	 */
-	private static EmpleadoService service = EmpleadoServiceImpl.getInstance();
+	private static EmpleadoService service;
 
 	/**
 	 * 
@@ -41,18 +41,20 @@ public class EmpleadosEndpoint extends HttpServlet {
 	public EmpleadosEndpoint() {
 		super();
 		logger.info("Empleado EndPoint creado");
+		service = EmpleadoServiceImpl.getInstance();
 	}
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException {
 		logger.info("Get receive...");
 		Empleado resultEmpleado = null;
-		Integer id = null;
+		Integer id = 0;
 		/*
 		 * Validar datos de la petición
 		 */
 		try {
 			id = Integer.parseInt(request.getParameter("id"));
+			logger.info("GET at {} with ID: {}", request.getContextPath(), id);
 		} catch (Exception e) {
 			logger.error("BadRequest: " + e.getMessage());
 			response.addHeader("Content-Type", "text/html");
@@ -67,22 +69,24 @@ public class EmpleadosEndpoint extends HttpServlet {
 		 * Obtener los datos según el ID
 		 */
 		logger.info("doGet id: " + id);
-		try {
-			resultEmpleado = service.findById(id);
-		} catch (EmpleadoException e) {
-			logger.error("Empleado Exception: " + e.getMessage());
+		resultEmpleado = service.findById(id);
+		if (resultEmpleado == null) {
+			response.addHeader("Content-Type", "application/json");
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+			try {
+				response.getWriter().println("El empleado no existe.");
+			} catch (IOException ioe) {
+				logger.error("Exception: " + ioe.getMessage());
+			}
+			return;
 		}
 		/*
 		 * Devolver los resultados
 		 */
 		try {
 			response.addHeader("Content-Type", "application/json");
-			if (resultEmpleado != null) {
-				response.setStatus(HttpServletResponse.SC_OK);
-				response.getWriter().println(g.toJson(resultEmpleado));
-			} else {
-				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-			}
+			response.setStatus(HttpServletResponse.SC_OK);
+			response.getWriter().println(g.toJson(resultEmpleado));
 		} catch (Exception e) {
 			response.addHeader("Content-Type", "text/html");
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -100,7 +104,7 @@ public class EmpleadosEndpoint extends HttpServlet {
 		/*
 		 * Variables Empleado
 		 */
-		Integer id = null;
+		Integer id = 0;
 		String nombre = null;
 		String imagen = null;
 		String cargo = null;
@@ -113,12 +117,13 @@ public class EmpleadosEndpoint extends HttpServlet {
 			nombre = request.getParameter("nombre");
 			imagen = request.getParameter("imagen");
 			cargo = request.getParameter("cargo");
+			logger.info("Data:" + id + "," + nombre + "," + imagen + "," + cargo + ",");
 		} catch (Exception e) {
 			logger.error("BadRequest: " + e.getMessage());
 			response.addHeader("Content-Type", "text/html");
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			try {
-				response.getWriter().println("Petición incorrecta");
+				response.getWriter().println("Petición incorrecta: faltan datos");
 			} catch (IOException ioe) {
 				logger.error("Exception: " + ioe.getMessage());
 			}
@@ -126,11 +131,7 @@ public class EmpleadosEndpoint extends HttpServlet {
 		/*
 		 * Validar que no exista el Empleado
 		 */
-		try {
-			empleado = service.findById(id);
-		} catch (EmpleadoException e) {
-			logger.error("Empleado Exception: " + e.getMessage());
-		}
+		empleado = service.findById(id);
 		if (empleado != null) {
 			response.addHeader("Content-Type", "application/json");
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -147,6 +148,7 @@ public class EmpleadosEndpoint extends HttpServlet {
 		 */
 		try {
 			empleado = service.create(id, nombre, imagen, cargo);
+			response.addHeader("Content-Type", "application/json");
 			response.setStatus(HttpServletResponse.SC_CREATED);
 			try {
 				response.getWriter().println(g.toJson(empleado));
@@ -164,7 +166,7 @@ public class EmpleadosEndpoint extends HttpServlet {
 		/*
 		 * Variables Empleado
 		 */
-		Integer id = null;
+		Integer id = 0;
 		String nombre = null;
 		String imagen = null;
 		String cargo = null;
@@ -190,11 +192,7 @@ public class EmpleadosEndpoint extends HttpServlet {
 		/*
 		 * Validar que si exista el Empleado
 		 */
-		try {
-			empleado = service.findById(id);
-		} catch (EmpleadoException e) {
-			logger.error("Empleado Exception: " + e.getMessage());
-		}
+		empleado = service.findById(id);
 		if (empleado == null) {
 			response.addHeader("Content-Type", "application/json");
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -227,7 +225,7 @@ public class EmpleadosEndpoint extends HttpServlet {
 	protected void doDelete(HttpServletRequest request, HttpServletResponse response) {
 		logger.info("Delete receive...");
 		Empleado resultEmpleado = null;
-		Integer id = null;
+		Integer id = 0;
 		/*
 		 * Validar datos de la petición
 		 */
@@ -247,14 +245,20 @@ public class EmpleadosEndpoint extends HttpServlet {
 		 * Obtener los datos según el ID
 		 */
 		logger.info("doGet id: " + id);
-		try {
-			resultEmpleado = service.findById(id);
-		} catch (EmpleadoException e) {
-			logger.error("Empleado Exception: " + e.getMessage());
-		}
+		resultEmpleado = service.findById(id);
 		/*
 		 * Eliminar el empleado
 		 */
+		if (resultEmpleado == null) {
+			response.addHeader("Content-Type", "application/json");
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			try {
+				response.getWriter().println("El empleado no existe.");
+			} catch (IOException ioe) {
+				logger.error("Exception: " + ioe.getMessage());
+			}
+			return;
+		}
 		try {
 			response.addHeader("Content-Type", "application/json");
 			if (service.delete(resultEmpleado)) {
