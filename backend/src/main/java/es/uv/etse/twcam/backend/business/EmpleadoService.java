@@ -29,7 +29,7 @@ public interface EmpleadoService{
     /*
      * Eliminar empleado
      */
-    public void delete(Empleado empleado) throws EmpleadoException;
+    public Boolean delete(Empleado empleado) throws EmpleadoException;
 
 
 

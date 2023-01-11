@@ -75,14 +75,34 @@ public class EmpleadoServiceImpl implements EmpleadoService {
         return newEmpleado;
     }
 
-    public Empleado update(Empleado newData) {
-        Empleado empleadoExistente = null;
+    public Empleado update(Empleado newEmpleadoData) throws EmpleadoException {
+        if(newEmpleadoData!=null){
+            if(dictionary.containsKey(newEmpleadoData.getId())){
+                dictionary.put(newEmpleadoData.getId(), newEmpleadoData);
+            }else{
+                throw new EmpleadoDictionaryEmptyException("No se encuentra el ID dentro del diccionario.");
+            }
+        }else{
+            throw new EmpleadoIncorrectDataException("Eror de datos");            
+        }
 
-        return empleadoExistente;
+        return newEmpleadoData;
     }
 
-    public void delete(Empleado empleado) {
+    public Boolean delete(Empleado empleadoToDelete) throws EmpleadoException {
+        Boolean deleted = false;
+        if(empleadoToDelete!=null){
+            if(dictionary.containsKey(empleadoToDelete.getId())){
+                dictionary.remove(empleadoToDelete.getId());
+                deleted = true;
+            }else{
+                throw new EmpleadoDictionaryEmptyException("No se encuentra el ID dentro del diccionario.");
+            }
+        }else{
+            throw new EmpleadoIncorrectDataException("Eror de datos");            
+        }
 
+        return deleted;
     }
 
 }
