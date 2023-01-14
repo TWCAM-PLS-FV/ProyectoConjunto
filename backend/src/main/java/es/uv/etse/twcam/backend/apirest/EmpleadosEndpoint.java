@@ -19,7 +19,7 @@ import es.uv.etse.twcam.backend.business.EmpleadoService;
 import es.uv.etse.twcam.backend.business.EmpleadoServiceImpl;
 import es.uv.etse.twcam.backend.business.EmpleadoExceptions.EmpleadoException;
 
-@WebServlet("/api/empleados/")
+@WebServlet("/api/empleados/*")
 public class EmpleadosEndpoint extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -147,7 +147,7 @@ public class EmpleadosEndpoint extends HttpServlet {
 		 * Creando el empleado Si no existe
 		 */
 		try {
-			empleado = service.create(id, nombre, imagen, cargo);
+			empleado = service.create(new Empleado(id, nombre, imagen, cargo));
 			response.addHeader("Content-Type", "application/json");
 			response.setStatus(HttpServletResponse.SC_CREATED);
 			try {

@@ -13,9 +13,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import es.uv.etse.twcam.backend.business.Producto;
+import es.uv.etse.twcam.backend.business.Empleado;
+import es.uv.etse.twcam.backend.business.EmpleadoService;
+import es.uv.etse.twcam.backend.business.EmpleadoServiceImpl;
 import es.uv.etse.twcam.backend.business.ProductException;
 import es.uv.etse.twcam.backend.business.ProductsService;
 import es.uv.etse.twcam.backend.business.ProductsServiceDictionaryImpl;
+import es.uv.etse.twcam.backend.business.EmpleadoExceptions.EmpleadoException;
 
 /**
  * Servlet de inicializaci&oacute;n
@@ -23,13 +27,12 @@ import es.uv.etse.twcam.backend.business.ProductsServiceDictionaryImpl;
  * @author <a href="mailto:raul.penya@uv.es">Ra&uacute;l Pe&ntilde;a-Ortiz</a>
  */
 public class InitServlet extends HttpServlet {
-	
-    
+
     /**
      * Identificador de versi&oacute;n
      */
-	private static final long serialVersionUID = 1L;
-	
+    private static final long serialVersionUID = 1L;
+
     /**
      * Logger
      */
@@ -41,11 +44,11 @@ public class InitServlet extends HttpServlet {
 
             logger.info("Starting angular-j2e-example apirest ...");
 
-            String jsonFile = getServletConfig().getInitParameter("json-database"); //<1>
+            String jsonFile = getServletConfig().getInitParameter("json-database"); // <1>
 
             InputStream jsonStream = getServletContext().getResourceAsStream(jsonFile); // <2>
 
-            initProductsService(jsonStream); // <3>
+            initEmpleadoService(jsonStream); // <3>
 
             logger.info("plc-pls-mps-tutorial apirest is started");
 
@@ -57,25 +60,26 @@ public class InitServlet extends HttpServlet {
 
     /**
      * Crea el servicio de productos y lo inicializa a partir de un stream JSON.
+     * 
      * @param jsonStream Stream JSON
      * @throws Exception Indicador de errores
      */
-    public static ProductsService initProductsService(InputStream jsonStream) 
-    throws ProductException { // <3>
+    public static EmpleadoService initEmpleadoService(InputStream jsonStream)
+            throws EmpleadoException { // <3>
 
-        ProductsServiceDictionaryImpl service = ProductsServiceDictionaryImpl.getInstance();
+        EmpleadoServiceImpl service = EmpleadoServiceImpl.getInstance();
 
         Reader jsonReader = new InputStreamReader(jsonStream);
 
         Gson gson = new GsonBuilder().create();
 
-        Producto[] productos = gson.fromJson(jsonReader, Producto[].class);
+        Empleado[] empleados = gson.fromJson(jsonReader, Empleado[].class);
 
-        for (Producto producto : productos) {
-            service.create(producto);
+        for (Empleado empleado : empleados) {
+            service.create(empleado);
         }
 
-        logger.info("Cargados {} productos", productos.length);
+        logger.info("Cargados {} empleados", empleados.length);
 
         return service;
     }

@@ -67,13 +67,12 @@ public class EmpleadoServiceImpl implements EmpleadoService {
         return empleado;
     }
 
-    public Empleado create(Integer id, String nombre, String imagen, String cargo) throws EmpleadoException {
-        newEmpleado = new Empleado(id, nombre, imagen, cargo);
-        if (newEmpleado != null) {
-            dictionary.put(newEmpleado.getId(), newEmpleado);
+    public Empleado create(Empleado empleado) throws EmpleadoException {
+        if (empleado != null && empleado.getId() != null) {
+            dictionary.put(empleado.getId(), empleado);
         } else
             throw new EmpleadoIncorrectDataException("Eror de datos");
-        return newEmpleado;
+        return empleado;
     }
 
     public Empleado update(Empleado newEmpleadoData) throws EmpleadoException {

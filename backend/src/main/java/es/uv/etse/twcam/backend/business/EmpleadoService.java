@@ -19,7 +19,7 @@ public interface EmpleadoService {
     /*
      * Crear empleado
      */
-    public Empleado create(Integer id, String nombre, String imagen, String cargo) throws EmpleadoException;
+    public Empleado create(Empleado empleado) throws EmpleadoException;
 
     /*
      * Actualizar datos de empleado
