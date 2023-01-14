@@ -14,8 +14,8 @@ import org.apache.logging.log4j.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import es.uv.etse.twcam.backend.business.Producto;
-import es.uv.etse.twcam.backend.business.ProductsService;
+import es.uv.etse.twcam.backend.business.Empleado;
+import es.uv.etse.twcam.backend.business.EmpleadoService;
 
 public class InitServletTest {
 
@@ -23,7 +23,7 @@ public class InitServletTest {
      * Logger
      */
     private static Logger logger = null;
-    
+
     @BeforeAll
     public static void setLogger() {
         logger = LogManager.getLogger(InitServletTest.class.getName());
@@ -48,16 +48,15 @@ public class InitServletTest {
     @Test
     void testInitProductsService() throws Exception {
 
-
         InputStream jsonStream = InitServlet.class.getClassLoader().getResourceAsStream("db.json");
 
-        ProductsService service = InitServlet.initProductsService(jsonStream);
-        
-        assertNotNull(service);
-        
-        List<Producto> productos = service.listAll();
+        EmpleadoService service = InitServlet.initEmpleadoService(jsonStream);
 
-        assertNotNull(productos);
-        assertEquals(4, productos.size());
+        assertNotNull(service);
+
+        List<Empleado> empleados = service.listAll();
+
+        assertNotNull(empleados);
+        assertEquals(2, empleados.size());
     }
 }
